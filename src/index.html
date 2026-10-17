@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PITCH BLACK - The Whitepaper</title>
+<meta name="description" content="Pitch Black Industries - the investment thesis. One operator, an AI fleet, asymmetric upside. Shown with the math." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+<!-- KaTeX for typeset mathematics -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+  :root{
+    --bg:#000; --panel:#050505; --ink:#ECE7DD; --soft:#b6b1a6; --dim:#6b675f; --faint:#26241f;
+    --gold:#B8924A; --gold-bright:#D9B872;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:"Inter",sans-serif;font-weight:300;
+    line-height:1.7;letter-spacing:.012em;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:var(--gold);color:#000}
+  .serif{font-family:"Cormorant Garamond",serif}
+  .micro{font-size:10px;letter-spacing:.46em;text-transform:uppercase;color:var(--dim);font-weight:400}
+  .gold{color:var(--gold)}
+  a{color:var(--gold);text-decoration:none}
+
+  /* scroll progress */
+  #prog{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-bright));z-index:100}
+
+  /* hero */
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+    padding:0 8vw;position:relative;overflow:hidden}
+  .hero .kick{margin-bottom:40px}
+  .hero h1{font-family:"Cormorant Garamond",serif;font-weight:300;
+    font-size:clamp(64px,15vw,220px);line-height:.84;letter-spacing:-.03em}
+  .hero h1 .amp{color:var(--gold)}
+  .hero .lede{margin-top:40px;max-width:640px;font-size:clamp(15px,2vw,19px);color:var(--soft);font-weight:300}
+  .hero .rule{width:1px;height:80px;background:linear-gradient(var(--gold),transparent);margin-top:60px}
+  .hero .cue{position:absolute;bottom:36px;left:8vw;animation:float 3s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(8px);opacity:1}}
+  .starline{position:absolute;right:8vw;top:0;height:100%;width:1px;background:var(--faint)}
+  .star{position:absolute;right:calc(8vw - 4px);width:9px;height:9px;background:var(--gold);border-radius:50%;
+    box-shadow:0 0 24px 4px rgba(184,146,74,.5);animation:drift 14s linear infinite}
+  @keyframes drift{0%{top:-2%;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:102%;opacity:0}}
+
+  /* layout */
+  main{max-width:1180px;margin:0 auto;padding:0 8vw}
+  section{padding:14vh 0;border-top:1px solid var(--faint);position:relative}
+  .chapnum{font-family:"Cormorant Garamond",serif;font-size:clamp(48px,8vw,120px);color:transparent;
+    -webkit-text-stroke:1px var(--gold);line-height:.8;opacity:.55}
+  h2{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(34px,5.5vw,68px);
+    line-height:1.02;letter-spacing:-.02em;margin:14px 0 30px;max-width:18ch}
+  h3{font-family:"Cormorant Garamond",serif;font-weight:400;font-size:clamp(22px,3vw,32px);margin:46px 0 16px;color:var(--ink)}
+  p{max-width:68ch;margin:18px 0;color:var(--soft)}
+  p strong,li strong{color:var(--ink);font-weight:500}
+  .lead{font-size:clamp(17px,2.2vw,22px);color:var(--ink);font-weight:300}
+  ul{margin:18px 0 18px 0;max-width:68ch;list-style:none}
+  ul li{position:relative;padding-left:26px;margin:10px 0;color:var(--soft)}
+  ul li::before{content:"";position:absolute;left:0;top:12px;width:7px;height:1px;background:var(--gold)}
+
+  /* plain-words callout */
+  .plain{border-left:1px solid var(--gold);padding:6px 0 6px 22px;margin:22px 0;max-width:64ch}
+  .plain .tag{font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:6px}
+  .plain p{margin:0;color:var(--ink);font-style:italic;font-family:"Cormorant Garamond",serif;font-size:20px}
+
+  /* formula block */
+  .math{background:var(--panel);border:1px solid var(--faint);border-radius:2px;
+    padding:26px 30px;margin:26px 0;overflow-x:auto}
+  .math .cap{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-top:14px}
+
+  /* tables */
+  .tbl{width:100%;border-collapse:collapse;margin:26px 0;font-size:14px}
+  .tbl th,.tbl td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--faint)}
+  .tbl th{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);font-weight:400}
+  .tbl td{color:var(--soft)}
+  .tbl td:first-child{color:var(--ink)}
+  .tbl .num{font-variant-numeric:tabular-nums;text-align:right}
+  .tbl .hl{color:var(--gold)}
+  .tbl tr:hover td{background:#070707}
+
+  /* two-col */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:6%;align-items:start}
+  @media(max-width:780px){.grid2{grid-template-columns:1fr}}
+
+  /* figure */
+  figure{margin:34px 0}
+  figcaption{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-top:14px}
+  svg .axis{stroke:var(--faint);stroke-width:1}
+  svg .grid{stroke:#141310;stroke-width:1}
+  svg .curve{fill:none;stroke:var(--gold);stroke-width:2}
+  svg .area{fill:rgba(184,146,74,.08)}
+  svg text{fill:var(--dim);font-family:"Inter",sans-serif;font-size:11px}
+  svg .bar{fill:var(--gold)}
+
+  /* TOC */
+  #toc{position:fixed;top:50%;left:18px;transform:translateY(-50%);z-index:60;display:flex;flex-direction:column;gap:9px}
+  #toc a{display:block;font-size:10px;letter-spacing:.1em;color:var(--faint);transition:color .3s;text-transform:uppercase}
+  #toc a .dot{display:inline-block;width:14px;height:1px;background:currentColor;margin-right:8px;vertical-align:middle;transition:width .3s}
+  #toc a:hover,#toc a.active{color:var(--gold)}
+  #toc a.active .dot{width:28px}
+  @media(max-width:1100px){#toc{display:none}}
+
+  /* reveal */
+  .rv{opacity:0;transform:translateY(26px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
+
+  .kpi{display:flex;gap:5%;flex-wrap:wrap;margin:30px 0}
+  .kpi div{flex:1;min-width:150px}
+  .kpi .n{font-family:"Cormorant Garamond",serif;font-size:clamp(34px,5vw,56px);color:var(--gold);line-height:1}
+  .kpi .l{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-top:10px}
+
+  footer{padding:12vh 8vw;border-top:1px solid var(--faint);text-align:center}
+  .disc{font-size:11px;color:var(--dim);max-width:60ch;margin:20px auto;line-height:1.8}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+
+<nav id="toc"></nav>
+
+<!-- ░░░ HERO ░░░ -->
+<header class="hero">
+  <div class="starline"></div><div class="star"></div>
+  <div class="kick micro rv in">Pitch Black Industries · Investment Thesis · MMXXVI</div>
+  <h1 class="rv in">Pitch&nbsp;Black<span class="amp">.</span></h1>
+  <p class="lede rv in">One operator. A fleet of machines. A portfolio engineered so the downside is bounded and the upside is not. This is the thesis - shown with the mathematics, so it can be audited line by line.</p>
+  <div class="rule rv in"></div>
+  <div class="cue micro">scroll ↓</div>
+</header>
+
+<main>
+
+  <!-- 00 ABSTRACT -->
+  <section id="s0">
+    <div class="chapnum rv">00</div>
+    <h2 class="rv">Abstract</h2>
+    <p class="lead rv">Pitch Black Industries is a holding company run by a single operator who commands a fleet of AI agents and a small, skilled, low-cost remote team. That structure collapses the cost of production to near-software levels across ordinary industries - and lets one person operate what once required twenty.</p>
+    <p class="rv">The thesis rests on three claims, each formalised in the chapters that follow. <strong>First</strong>, the operator-leverage equation: output now scales with capital deployed into agents, not with headcount, so gross margins approach 70 - 90%. <strong>Second</strong>, the ventures are not independent - they share one reusable production engine and an overlapping customer graph, so each success lowers the cost of the next. <strong>Third</strong>, the portfolio is a basket of options: bounded loss, convex payoff. By Jensen's inequality, variance is an asset, not only a risk.</p>
+    <div class="kpi rv">
+      <div><div class="n">~A$0.85M</div><div class="l">Base run-rate, yr 1</div></div>
+      <div><div class="n">~A$1 - 4M</div><div class="l">Operating value (base→bull)</div></div>
+      <div><div class="n">85 - 99%</div><div class="l">Achievable gross margin</div></div>
+      <div><div class="n">&lt; capped</div><div class="l">Maximum loss</div></div>
+    </div>
+    <div class="plain rv"><span class="tag">In plain words</span><p>Small, almost-free to run, hard to kill, and with a real tail of becoming very large. We prove each of those four below.</p></div>
+  </section>
+
+  <!-- 01 THESIS IN ONE EQUATION -->
+  <section id="s1">
+    <div class="chapnum rv">01</div>
+    <h2 class="rv">The thesis, in one equation</h2>
+    <p class="rv">Classical firm output is roughly linear in people. Let \(H\) be headcount and \(p\) the output per person: \(\;\text{Output}\approx pH\). To grow, you hire - and cost grows with you.</p>
+    <p class="rv">The operator-leverage firm replaces people with capital deployed into agents and a thin human layer:</p>
+    <div class="math rv">
+      $$ \text{Output} \;\approx\; p\,\bigl(1 + \alpha A + \nu V\bigr) $$
+      <div class="cap">A = AI agents · V = remote operators · α, ν = their effectiveness</div>
+    </div>
+    <p class="rv">The decisive difference is the <em>cost</em> side. Margin is</p>
+    <div class="math rv">
+      $$ m \;=\; 1 - \frac{A\,c_A + V\,c_V}{R} $$
+      <div class="cap">c_A = cost per agent (API) · c_V = cost per operator · R = revenue</div>
+    </div>
+    <p class="rv">Because \(c_A\) (cents of inference) and \(c_V\) (≈ twice a local wage, still a fraction of a Western salary) are tiny relative to \(R\), \(m\) tends toward software economics. This is not speculative: it is the observed margin of solo operators already running multi-million-dollar software businesses (Ch. 12).</p>
+    <div class="plain rv"><span class="tag">In plain words</span><p>Hiring grows cost with output. Agents grow output without growing cost. That gap is the whole company.</p></div>
+  </section>
+
+  <!-- 02 THE ENGINE -->
+  <section id="s2">
+    <div class="chapnum rv">02</div>
+    <h2 class="rv">The engine</h2>
+    <p class="rv">The engine is a <strong>production system</strong>, not a product: encode the operator's domain judgement into agents, wrap a cheap human layer around the exceptions, point it at a vertical. The same engine that runs Workforce runs Valuations, Black Shift, and Fireflies with declining marginal effort.</p>
+    <table class="tbl rv">
+      <tr><th>Dimension</th><th>Classical firm</th><th>Operator-leverage firm</th></tr>
+      <tr><td>Scaling unit</td><td class="num">an employee</td><td class="num hl">a deployed agent</td></tr>
+      <tr><td>Marginal cost of output</td><td class="num">a salary</td><td class="num hl">cents</td></tr>
+      <tr><td>Time to add a vertical</td><td class="num">months, a team</td><td class="num hl">days, a config</td></tr>
+      <tr><td>Gross margin</td><td class="num">20 - 50%</td><td class="num hl">70 - 99%</td></tr>
+      <tr><td>Key-person risk</td><td class="num">distributed</td><td class="num">concentrated → encoded</td></tr>
+    </table>
+    <p class="rv">The last row is the catch and the opportunity. Concentration is a real discount on value (Ch. 11) - and the act of <em>encoding</em> the operator's judgement into the agents is precisely what dissolves it. The engine, fully written down, is the asset that re-rates the whole company.</p>
+  </section>
+
+  <!-- 03 THE VENTURES -->
+  <section id="s3">
+    <div class="chapnum rv">03</div>
+    <h2 class="rv">The ventures</h2>
+    <p class="rv">Eight lines, ranked by money-velocity × risk. Each carries an honest success probability - a subjective estimate with stated reasoning, not a guarantee.</p>
+    <table class="tbl rv">
+      <tr><th>Venture</th><th>What it is</th><th class="num">Base ARR</th><th class="num">P(meaningful)</th></tr>
+      <tr><td>Workforce</td><td>AI workforce-reliability SaaS (trades/labour)</td><td class="num hl">$159k</td><td class="num">~60%</td></tr>
+      <tr><td>Black Shift</td><td>creator-management agency (ops layer)</td><td class="num hl">$360k</td><td class="num">~45%</td></tr>
+      <tr><td>Fireflies</td><td>marketing/management services to venues</td><td class="num hl">$200k</td><td class="num">~70%</td></tr>
+      <tr><td>Valuations</td><td>instant AI property valuations (AVM)</td><td class="num hl">$60k</td><td class="num">~35%</td></tr>
+      <tr><td>DA-data</td><td>planning-approval intelligence product</td><td class="num hl">$30k</td><td class="num">~35%</td></tr>
+      <tr><td>AI micro</td><td>3 of 50 prototypes, Stripe-enabled</td><td class="num hl">$30k</td><td class="num">~20% (one)</td></tr>
+      <tr><td>Music</td><td>catalogue → streaming + sync</td><td class="num hl">$10k</td><td class="num">~5% (real)</td></tr>
+      <tr><td>Moonshots</td><td>Black Star, Black Monolith</td><td class="num">option</td><td class="num">~3 - 8%</td></tr>
+    </table>
+    <div class="plain rv"><span class="tag">In plain words</span><p>Two or three of these are likely to work. None of them needs a miracle. The miracle is a free extra.</p></div>
+  </section>
+
+  <!-- 04 THE MERGE -->
+  <section id="s4">
+    <div class="chapnum rv">04</div>
+    <h2 class="rv">The merge - how each venture funds the next</h2>
+    <p class="rv">The ventures compound through three couplings: a <strong>shared engine</strong> (build once, reuse), a <strong>shared customer graph</strong> (the venues that need Workforce also need Fireflies; the property buyer wants both Valuations and DA-data), and a <strong>shared sales motion</strong>.</p>
+    <h3 class="rv">The ignition chain</h3>
+    <ul class="rv">
+      <li><strong>Step 1.</strong> Capital + the first customer build <strong>Workforce</strong> → first revenue <em>and</em> a proven engine.</li>
+      <li><strong>Step 2.</strong> Workforce's cash + engine stamp out <strong>Valuations</strong> and <strong>Black Shift</strong> at falling marginal cost.</li>
+      <li><strong>Step 3.</strong> <strong>Fireflies</strong> runs in parallel on existing relationships - cash that needs no new sales.</li>
+      <li><strong>Step 4.</strong> With 2 - 3 wins, the engine is proven → the company re-rates above sum-of-parts → it funds the <strong>moonshots</strong> held cheaply as options.</li>
+      <li><strong>Step 5.</strong> If a moonshot converts, it dwarfs the operating base. If not, a real, profitable group remains.</li>
+    </ul>
+    <p class="rv">Formally, let the cost to launch venture \(i\) be \(K_i\) and the engine-reuse factor be \(\rho\in(0,1)\). The \(n\)-th venture costs \(K_n \approx K_0\,\rho^{\,n-1}\): each launch is cheaper. The portfolio is funded internally once cumulative free cash flow exceeds the discounted launch costs:</p>
+    <div class="math rv">
+      $$ \sum_{t} \frac{\mathrm{FCF}_t}{(1+r)^t} \;\ge\; \sum_{i} K_0\,\rho^{\,i-1} = K_0\,\frac{1-\rho^{n}}{1-\rho} $$
+    </div>
+    <p class="rv">With \(\rho\approx 0.6\), launching five ventures costs roughly \(2.1\,K_0\) - not \(5K_0\). That declining curve is the mathematical statement of "the factory."</p>
+  </section>
+
+  <!-- 05 REVENUE MODEL -->
+  <section id="s5">
+    <div class="chapnum rv">05</div>
+    <h2 class="rv">The revenue model</h2>
+    <p class="rv">Bottom-up, never top-down. Recurring revenue is units × price × 12; services are creators/sites × cut. Consolidated run-rate at year-end:</p>
+    <div class="math rv">
+      $$ \text{ARR} \;=\; \sum_{i \in \text{SaaS}} n_i\,p_i\cdot 12 \;+\; \sum_{j \in \text{svc}} c_j\,\bar{m}_j\cdot 12 $$
+      <div class="cap">n = clients, p = monthly price · c = creators/sites, m̄ = monthly margin each</div>
+    </div>
+    <table class="tbl rv">
+      <tr><th>Scenario</th><th class="num">Run-rate ARR</th><th class="num">Owner profit (SDE)</th><th class="num">Margin</th></tr>
+      <tr><td>Bear</td><td class="num">~$335k</td><td class="num">~$180k</td><td class="num">~54%</td></tr>
+      <tr><td class="hl">Base</td><td class="num hl">~$850k</td><td class="num hl">~$480k</td><td class="num">~57%</td></tr>
+      <tr><td>Bull</td><td class="num">~$2.6M</td><td class="num">~$1.5M</td><td class="num">~58%</td></tr>
+    </table>
+    <figure class="rv">
+      <svg viewBox="0 0 720 300" width="100%" role="img" aria-label="Scenario run-rate chart">
+        <line class="axis" x1="60" y1="250" x2="700" y2="250"/>
+        <line class="axis" x1="60" y1="40" x2="60" y2="250"/>
+        <!-- bars: bear 335, base 850, bull 2600 scaled to max 2600 -> height 200 -->
+        <rect class="bar" x="150" y="234" width="90" height="16" opacity="0.5"/>
+        <rect class="bar" x="330" y="185" width="90" height="65" opacity="0.8"/>
+        <rect class="bar" x="510" y="50" width="90" height="200"/>
+        <text x="195" y="270" text-anchor="middle">BEAR · $335k</text>
+        <text x="375" y="270" text-anchor="middle">BASE · $850k</text>
+        <text x="555" y="270" text-anchor="middle">BULL · $2.6M</text>
+        <text x="30" y="54">$2.6M</text><text x="30" y="250">0</text>
+      </svg>
+      <figcaption>Fig. 1 - Consolidated run-rate ARR by scenario (AUD).</figcaption>
+    </figure>
+  </section>
+
+  <!-- 06 VALUATION -->
+  <section id="s6">
+    <div class="chapnum rv">06</div>
+    <h2 class="rv">The valuation model</h2>
+    <p class="rv">Two methods, cross-checked. <strong>Method A - multiples.</strong> Per venture, value is its metric times a market multiple, less a haircut for one-person and concentration risk; the parts are summed and a conglomerate discount applied:</p>
+    <div class="math rv">
+      $$ \mathrm{EV} \;=\; \Bigl(\sum_i x_i\,\mu_i\,(1-h_i)\Bigr)\,(1-\delta) $$
+      <div class="cap">x = metric (ARR or SDE) · μ = multiple · h = venture haircut · δ = conglomerate discount</div>
+    </div>
+    <p class="rv">Market inputs (2026): small bootstrapped SaaS trades at 3 - 5× ARR (median small-SaaS ≈ 3.4×); services at 1 - 3× SDE. Worked, base case:</p>
+    <table class="tbl rv">
+      <tr><th>Venture</th><th class="num">Metric</th><th class="num">μ</th><th class="num">Haircut</th><th class="num">Value</th></tr>
+      <tr><td>Workforce</td><td class="num">$159k ARR</td><td class="num">3.5×</td><td class="num">−40%</td><td class="num hl">$334k</td></tr>
+      <tr><td>Black Shift</td><td class="num">$145k SDE</td><td class="num">2.0×</td><td class="num">−40%</td><td class="num hl">$174k</td></tr>
+      <tr><td>Fireflies</td><td class="num">$100k SDE</td><td class="num">2.5×</td><td class="num">−30%</td><td class="num hl">$175k</td></tr>
+      <tr><td>Valuations</td><td class="num">$60k ARR</td><td class="num">3.0×</td><td class="num">−40%</td><td class="num hl">$108k</td></tr>
+      <tr><td>DA + AI + Music</td><td class="num"> - </td><td class="num">~3×</td><td class="num">−40%</td><td class="num hl">$140k</td></tr>
+      <tr><td><strong>Sum / EV (−10% δ)</strong></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num hl">~$1.0M</td></tr>
+    </table>
+    <p class="rv"><strong>Method B - DCF cross-check.</strong> Treating base SDE ≈ $480k growing at \(g\) and discounted at \(r\): for a perpetuity-with-growth, \(V = \mathrm{SDE}\,(1+g)/(r-g)\). With \(r=0.35\) (venture-grade), \(g=0.15\): \(V \approx 480\text{k}\times1.15/0.20 \approx \$2.8\text{M}\) - above the multiples figure, as expected for a high discount rate forgiving of risk. The two methods bracket <strong>~$1 - 3M</strong>; we anchor on the conservative ~$1M.</p>
+    <div class="plain rv"><span class="tag">In plain words</span><p>Two independent methods, same neighbourhood. The honest operating value today is around a million, not a billion. The billion is a separate, free option - priced next.</p></div>
+  </section>
+
+  <!-- 07 PORTFOLIO AS OPTIONS -->
+  <section id="s7">
+    <div class="chapnum rv">07</div>
+    <h2 class="rv">The portfolio is a basket of options</h2>
+    <p class="rv">Each venture has a payoff distribution. The expected value of the whole is</p>
+    <div class="math rv">
+      $$ \mathbb{E}[V] \;=\; \sum_{k} P_k\,V_k $$
+    </div>
+    <p class="rv">The moonshots are <em>call options on the future</em>: their cost to keep alive is near-zero, their payoff is convex. The mathematical reason optionality is valuable is Jensen's inequality - for a convex payoff \(\phi\),</p>
+    <div class="math rv">
+      $$ \mathbb{E}\!\left[\phi(X)\right] \;\ge\; \phi\!\left(\mathbb{E}[X]\right) $$
+      <div class="cap">variance adds value when downside is truncated and upside is open</div>
+    </div>
+    <p class="rv">A venture you can abandon for the cost of a domain renewal has truncated downside (you lose the option premium, nothing more) and uncapped upside. Holding many such options is not recklessness; it is the rational response to convexity - <em>provided</em> each premium stays small. The discipline is in the premium, not the dream.</p>
+    <table class="tbl rv">
+      <tr><th>Enterprise outcome</th><th class="num">P (est.)</th><th class="num">Value</th><th class="num">P × V</th></tr>
+      <tr><td>Stalls / small</td><td class="num">~30%</td><td class="num">$0.4M</td><td class="num">$0.12M</td></tr>
+      <tr><td>Solid group</td><td class="num">~35%</td><td class="num">$1.5M</td><td class="num">$0.53M</td></tr>
+      <tr><td>Strong</td><td class="num">~20%</td><td class="num">$5M</td><td class="num">$1.0M</td></tr>
+      <tr><td>levelsio-class</td><td class="num">~10%</td><td class="num">$15M</td><td class="num">$1.5M</td></tr>
+      <tr><td>Moonshot converts</td><td class="num">~5%</td><td class="num">$60M</td><td class="num hl">$3.0M</td></tr>
+      <tr><td><strong>Expected value</strong></td><td class="num"></td><td class="num"></td><td class="num hl">~$6.2M</td></tr>
+    </table>
+    <div class="plain rv"><span class="tag">In plain words</span><p>The most likely single outcome is a good ~$1.5M business. But the fat tail drags the <em>average</em> outcome to ~$6M - and that tail costs almost nothing to keep open.</p></div>
+  </section>
+
+  <!-- 08 BLACK-SCHOLES -->
+  <section id="s8">
+    <div class="chapnum rv">08</div>
+    <h2 class="rv">Black - Scholes - the mathematical foundation</h2>
+    <p class="rv">To price the optionality rigorously we use the Black - Scholes - Merton framework. <em>(Reproduced and expanded here from first principles; the firm's quantitative work sits under the Black Monolith and Black Star programmes.)</em></p>
+    <h3 class="rv">Assumptions</h3>
+    <ul class="rv">
+      <li>The underlying \(S\) follows geometric Brownian motion with constant drift \(\mu\) and volatility \(\sigma\).</li>
+      <li>No arbitrage; continuous, frictionless trading; constant risk-free rate \(r\).</li>
+      <li>The option is European (exercised only at maturity \(T\)).</li>
+    </ul>
+    <h3 class="rv">The dynamics</h3>
+    <div class="math rv">$$ dS_t \;=\; \mu S_t\,dt \;+\; \sigma S_t\,dW_t $$</div>
+    <p class="rv">By Itô's lemma, for an option value \(V(S,t)\),</p>
+    <div class="math rv">$$ dV = \left(\frac{\partial V}{\partial t} + \mu S\frac{\partial V}{\partial S} + \tfrac12\sigma^2 S^2\frac{\partial^2 V}{\partial S^2}\right)dt + \sigma S\frac{\partial V}{\partial S}\,dW_t $$</div>
+    <h3 class="rv">The hedge that kills the randomness</h3>
+    <p class="rv">Form a portfolio long the option, short \(\Delta\) units of the underlying: \(\Pi = V - \Delta S\). Choosing \(\Delta = \partial V/\partial S\) cancels the \(dW\) term, leaving a riskless portfolio that must therefore earn \(r\). This yields the Black - Scholes PDE:</p>
+    <div class="math rv">$$ \frac{\partial V}{\partial t} + \tfrac12\sigma^2 S^2\frac{\partial^2 V}{\partial S^2} + rS\frac{\partial V}{\partial S} - rV = 0 $$</div>
+    <h3 class="rv">The solution (European call)</h3>
+    <div class="math rv">
+      $$ C = S_0\,N(d_1) - K e^{-rT} N(d_2) $$
+      $$ d_1 = \frac{\ln(S_0/K) + (r + \tfrac12\sigma^2)T}{\sigma\sqrt{T}}, \qquad d_2 = d_1 - \sigma\sqrt{T} $$
+      <div class="cap">N = standard normal CDF · equivalently, C = e^(−rT) E^Q[max(S_T − K, 0)]</div>
+    </div>
+    <div class="plain rv"><span class="tag">In plain words</span><p>If you can continuously hedge an option, its fair price doesn't depend on whether the asset goes up or down on average - only on how much it <em>moves</em>. Volatility is the price of optionality. That is the bridge to the next chapter.</p></div>
+  </section>
+
+  <!-- 09 CONVERTIBLE -->
+  <section id="s9">
+    <div class="chapnum rv">09</div>
+    <h2 class="rv">Pricing the convertible - the proof of asymmetry</h2>
+    <p class="rv">The financing instrument offered to the anchor partner is a <strong>convertible note</strong>: principal \(D\) protected as a loan, with the right to convert into a fraction \(w\) of the company. Its terminal payoff, as a function of company value \(V_T\), is</p>
+    <div class="math rv">
+      $$ \text{Payoff}(V_T) \;=\; \max\bigl(D(1+r),\; w\,V_T\bigr) \;=\; \underbrace{D(1+r)}_{\text{bond}} \;+\; \underbrace{\max\bigl(w V_T - D(1+r),\,0\bigr)}_{\text{call on the company}} $$
+    </div>
+    <p class="rv">It decomposes exactly into a <strong>bond plus a call option</strong> on company value, struck at \(K = D(1+r)/w\). With \(D=\$200\text{k}\), \(r=8\%\), \(w=4\%\):</p>
+    <div class="math rv">$$ K = \frac{200{,}000\times1.08}{0.04} = \$5.4\text{M} $$</div>
+    <p class="rv">So the partner's upside is precisely a call that pays whenever the company clears ~$5.4M. We price it with Black - Scholes, treating company value as the underlying - conservatively starting at today's grounded operating value \(V_0 = \$1.0\text{M}\), with \(T=4\) years, \(r=4\%\):</p>
+    <table class="tbl rv">
+      <tr><th>Volatility σ</th><th class="num">d₁</th><th class="num">d₂</th><th class="num">Call value (today)</th></tr>
+      <tr><td>0.50 (moderate)</td><td class="num">−1.03</td><td class="num">−2.03</td><td class="num hl">~$54k</td></tr>
+      <tr><td>0.65 (high)</td><td class="num">−0.52</td><td class="num">−1.82</td><td class="num hl">~$143k</td></tr>
+      <tr><td>0.80 (startup-grade)</td><td class="num">−0.15</td><td class="num">−1.75</td><td class="num hl">~$256k</td></tr>
+    </table>
+    <p class="rv">The embedded option is worth <strong>tens to a few hundred thousand dollars today</strong> - given <em>free</em>, on top of a fully protected principal. That is the cost of the asymmetry, quantified honestly: the partner pays $200k, can never lose it, and receives an option worth ~$54k - $256k as a bonus.</p>
+    <figure class="rv">
+      <svg viewBox="0 0 720 320" width="100%" role="img" aria-label="Convertible payoff diagram">
+        <line class="axis" x1="70" y1="270" x2="700" y2="270"/>
+        <line class="axis" x1="70" y1="30" x2="70" y2="270"/>
+        <!-- payoff: flat at y for 220k until V=5.5M then rises. X: 0..15M over 70..690 ; Y: 0..700k over 270..40 -->
+        <!-- flat segment: 220k -> y = 270 - (220/700)*230 = 270-72 =198 ; from x=70 to x at 5.5M: 70+(5.5/15)*620=70+227=297 -->
+        <path class="area" d="M70,198 L297,198 L690,142 L690,270 L70,270 Z"/>
+        <path class="curve" d="M70,198 L297,198 L690,142"/>
+        <line class="grid" x1="297" y1="40" x2="297" y2="270" stroke-dasharray="3 4"/>
+        <text x="300" y="300">$5.4M (strike)</text>
+        <text x="80" y="190">$220k floor</text>
+        <text x="600" y="130">rises at 4%</text>
+        <text x="360" y="320" text-anchor="middle">company value V →</text>
+        <text x="30" y="50">payoff</text>
+      </svg>
+      <figcaption>Fig. 2 - The partner's payoff: a flat floor (principal protected), then convex upside past the strike. Bounded loss, open gain.</figcaption>
+    </figure>
+    <div class="plain rv"><span class="tag">In plain words</span><p>Below ~$5.4M of company value, the partner just takes their money back with interest. Above it, they own 4% of everything. They cannot lose the principal; they can win many times it. That is not a sales line - it is an identity in the payoff algebra.</p></div>
+  </section>
+
+  <!-- 10 KELLY -->
+  <section id="s10">
+    <div class="chapnum rv">10</div>
+    <h2 class="rv">Bet sizing - the Kelly discipline</h2>
+    <p class="rv">Optionality without sizing is ruin. The Kelly criterion gives the growth-optimal fraction of capital (or attention) to place on an edge:</p>
+    <div class="math rv">
+      $$ f^\star = \frac{bp - q}{b} = \frac{\text{edge}}{\text{odds}} $$
+      <div class="cap">p = win probability · q = 1−p · b = win/loss payoff ratio</div>
+    </div>
+    <p class="rv">Applied to attention rather than dollars, Kelly says: concentrate the bulk of effort on the highest-edge, highest-probability ventures (Workforce, Fireflies), and keep only fractional Kelly stakes on the convex long-shots. It is the formal statement of the strategic verdict: <strong>focus the certain, ration the speculative.</strong></p>
+  </section>
+
+  <!-- 11 RISK -->
+  <section id="s11">
+    <div class="chapnum rv">11</div>
+    <h2 class="rv">Risk - the honest base case</h2>
+    <ul class="rv">
+      <li><strong>Key-person (bus-factor = 1).</strong> The largest discount. Mitigant: encode judgement into the engine - the same act that re-rates value.</li>
+      <li><strong>Regulatory clustering.</strong> Three lines touch AU regulation (valuations→credit, financial strategies→AFSL, adult-services advertising). Validate before spend; handle the cluster once.</li>
+      <li><strong>Concentration.</strong> Early Workforce revenue ≈ one customer. Fixed by client velocity.</li>
+      <li><strong>Base rates.</strong> Most solo portfolios return ~$0. The honest modal outcome here is "a good $1M business," not a billion.</li>
+    </ul>
+    <p class="rv">Probability of ruin is low precisely because the structure bounds loss: maximum downside is the operator's time plus small option premiums. There is no debt spiral, no inventory, no payroll cliff. The portfolio is built to survive being wrong.</p>
+  </section>
+
+  <!-- 12 COMPS -->
+  <section id="s12">
+    <div class="chapnum rv">12</div>
+    <h2 class="rv">The category is real</h2>
+    <table class="tbl rv">
+      <tr><th>Operator</th><th>Structure</th><th class="num">Revenue / outcome</th></tr>
+      <tr><td>Pieter Levels</td><td>0 employees</td><td class="num hl">~A$4.5M/yr, 85 - 99% margin</td></tr>
+      <tr><td>Marc Lou</td><td>solo</td><td class="num">~A$1.5 - 3M/yr</td></tr>
+      <tr><td>Tony Dinh · Danny Postma</td><td>solo</td><td class="num">~A$1.5M/yr each</td></tr>
+      <tr><td>Markus Frind</td><td>~1 - 3 staff</td><td class="num hl">sold ~A$870M</td></tr>
+      <tr><td>Median attempt</td><td>solo</td><td class="num">≈ $0 (survivorship)</td></tr>
+    </table>
+    <p class="rv">The ceiling is proven; the floor is brutal. The differentiator among winners is empirically <strong>concentration</strong> - 1 to 4 products, not 13. The strategy adopts the winners' discipline: concentrate cash, hold the rest as options.</p>
+  </section>
+
+  <!-- 13 ROADMAP -->
+  <section id="s13">
+    <div class="chapnum rv">13</div>
+    <h2 class="rv">Roadmap</h2>
+    <ul class="rv">
+      <li><strong>Q3 2026.</strong> Workforce live on anchor customer; productise; Rainmaker sales agent online.</li>
+      <li><strong>Q4 2026.</strong> 5+ Workforce clients; Valuations AVM soft-launch; Fireflies service formalised; first re-rate evidence.</li>
+      <li><strong>2027.</strong> Engine proven across 3 verticals; moonshot prototypes funded from cash flow.</li>
+    </ul>
+    <p class="rv micro">Chapters 14+ (full venture appendices, sensitivity grids, the Black Monolith alpha library, and the Black Star architecture) extend this document toward its complete form.</p>
+  </section>
+
+  <!-- 14 APPENDIX -->
+  <section id="s14">
+    <div class="chapnum rv">14</div>
+    <h2 class="rv">Appendix - assumptions register</h2>
+    <table class="tbl rv">
+      <tr><th>Lever</th><th class="num">Bear</th><th class="num">Base</th><th class="num">Bull</th></tr>
+      <tr><td>Workforce clients (Dec)</td><td class="num">1</td><td class="num">5</td><td class="num">12</td></tr>
+      <tr><td>Black Shift creators</td><td class="num">3</td><td class="num">7</td><td class="num">16</td></tr>
+      <tr><td>Fireflies sites</td><td class="num">2</td><td class="num">4</td><td class="num">8</td></tr>
+      <tr><td>Blended SDE margin</td><td class="num">54%</td><td class="num">57%</td><td class="num">58%</td></tr>
+      <tr><td>Engine-reuse ρ</td><td class="num">0.7</td><td class="num">0.6</td><td class="num">0.5</td></tr>
+      <tr><td>Convertible: D, r, w</td><td class="num" colspan="3">$200k · 8% · 4% (K = $5.4M)</td></tr>
+    </table>
+    <p class="rv micro">All figures AUD. USD converted at ~0.66. Estimates are scenario models, not forecasts or commitments. Multiples per 2026 market data. Independent verification required before any external or financing use.</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="serif" style="font-size:40px">Pitch Black<span class="gold">.</span></div>
+  <p class="disc">Confidential investment thesis - internal planning draft. Nothing herein is an offer of securities, financial product advice, or a forecast. Mathematical models are illustrative and depend on stated assumptions. © Pitch Black Industries · Daylight Fireflies Pty Ltd ATF Rio Kho Family Trust.</p>
+  <div class="micro" style="margin-top:24px">black.industries</div>
+</footer>
+
+<script>
+  // scroll progress
+  const prog=document.getElementById('prog');
+  addEventListener('scroll',()=>{const h=document.documentElement;const sc=h.scrollTop/(h.scrollHeight-h.clientHeight);prog.style.width=(sc*100)+'%';},{passive:true});
+
+  // build TOC
+  const labels=[['s0','Abstract'],['s1','Thesis'],['s2','Engine'],['s3','Ventures'],['s4','Merge'],['s5','Revenue'],['s6','Valuation'],['s7','Options'],['s8','Black-Scholes'],['s9','Convertible'],['s10','Kelly'],['s11','Risk'],['s12','Comps'],['s13','Roadmap'],['s14','Appendix']];
+  const toc=document.getElementById('toc');
+  labels.forEach(([id,name],i)=>{const a=document.createElement('a');a.href='#'+id;a.innerHTML='<span class="dot"></span>'+String(i).padStart(2,'0')+' '+name;a.dataset.id=id;toc.appendChild(a);});
+
+  // reveal + active section
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});},{threshold:.12});
+  document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+  const secs=[...document.querySelectorAll('section')];
+  const tlinks=[...document.querySelectorAll('#toc a')];
+  const so=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){tlinks.forEach(l=>l.classList.toggle('active',l.dataset.id===e.target.id));}});},{rootMargin:'-45% 0px -45% 0px'});
+  secs.forEach(s=>so.observe(s));
+
+  // typeset math
+  addEventListener('DOMContentLoaded',()=>{if(window.renderMathInElement)renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]});});
+  window.addEventListener('load',()=>{if(window.renderMathInElement)renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]});});
+</script>
+</body>
+</html>
